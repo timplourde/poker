@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Planning Poker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        	html {
+        		height: 100%;
+        		width: 100%;
+        		background-color: black;
+        		color: white;
+        	}
+        	.hand {
+        		display: flex;
+        		flex-direction: row;
+        		flex-wrap: wrap;
+        		justify-content: center;
+        		height: auto;
+        	}
+        	.card {
+        		cursor: pointer;
+        		border: 4px solid white;
+        		font-size: 4rem;
+        		width: 5.4rem;
+        		margin: 1rem;
+        		padding: 1rem;
+        		text-align: center;
+        		border-radius: .5rem;
+        	}
+        	.card.hidden {
+        		display: none;
+        	}
+        	.card.selected {
+        		position: absolute;
+        		border: 0;
+        		margin: 0;
+        		padding: 0;
+        		top: 0;
+        		bottom: 0;
+        		left: 0;
+        		right: 0;
+        		width: 100%;
+        		height: 100%;
+        		font-size: 50vh;
+        	}
+        </style>
+    </head>
+    <body>
+
+    	<div id="deck" class="hand">
+
+    	</div>
+
+    	<script>
+    	function getQueryStringValue (key) {  
+		  return unescape(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + escape(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+		}  
+
+		function init() {
+			var defaultSequence = ["1/2", "1", "2", "3", "5", "8", "13", "21", "?"]
+			var sequence = getQueryStringValue("s"); 
+	    	if(sequence && sequence.length) {
+	    		sequence = sequence.split(",").map(function(i) {
+	    			i = i.trim();
+	    			return i;
+	    		}).filter(function(i) {
+	    			return i.length;
+	    		});
+	    	} else {
+	    		sequence = defaultSequence;
+	    	}
+	    	return sequence;
+		}
+
+
+    	</script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<script>
+			$(document).on('ready', function(){
+				var sequence = init(),
+					$deck = $("#deck");
+				sequence.forEach(function(card){
+					$deck.append($("<div class='card'>"+card+"</div>"));
+				});
+				var $cards = $(".card");
+				$(".card").on("click", function() {
+					var $card = $(this);
+					if($card.hasClass("selected")){
+						// back to deck
+						$(this).removeClass("selected");
+						$cards.removeClass("hidden");
+					} else {
+						// show card
+						$cards.addClass("hidden");
+						$(this).removeClass("hidden").addClass("selected");
+					}
+					
+				});
+			});
+		</script>
+
+    </body>
+</html>
